@@ -33,6 +33,7 @@ class WineFlow(FlowSpec):
     def rename_cols(self):
         """
         Give the wine data some computer friendlier column names
+        Save to "data/interim/wine_df_nice_cols.csv"
         """
         # could not find out what this means! All google hits were for this dataset
         self.dataframe = self.dataframe.rename(
@@ -41,30 +42,33 @@ class WineFlow(FlowSpec):
         self.dataframe.columns = [
             col.lower().replace(" ", "_") for col in self.dataframe.columns
         ]
-        self.file_name = "wine_df_nice_cols.csv"
-        self.next(self.save)
 
-    @step
-    def save(self):
-        """
-        Save the dataframe to data/interim
-        """
-        import pandas as pd
-
-        save_path = PROJECT_DIR / "data" / "interim" / self.file_name
+        save_path = PROJECT_DIR / "data" / "interim" / "wine_df_nice_cols.csv"
         self.dataframe.to_csv(save_path, index=False)
+
+        self.next(self.make_tidy)
+    
+    @step
+    def make_tidy(self):
+        """
+        Create a tidy version of the wine dataframe
+        Save to "data/interim/wine_df_tidy.csv"
+        """
+        self.dataframe.index.name = 'wine_id'
+        self.dataframe = self.dataframe.reset_index()
+        self.dataframe = self.dataframe.melt(id_vars=['wine_id', 'class'])
+
+        save_path = PROJECT_DIR / "data" / "interim" / "wine_df_tidy.csv"
+        self.dataframe.to_csv(save_path, index=False)
+
         self.next(self.end)
 
     @step
     def end(self):
         """
-        Save the dataframe to data/processed
         End the flow.
         """
-        import pandas as pd
-
-        save_path = PROJECT_DIR / "data" / "processed" / "wine_df_final.csv"
-        self.dataframe.to_csv(save_path, index=False)
+        pass
 
 
 if __name__ == "__main__":
