@@ -1,7 +1,7 @@
 ml-wine
 ==============================
 
-machine learning on the wine dataset
+machine learning on the [wine dataset](https://archive.ics.uci.edu/ml/machine-learning-databases/wine/)
 
 Project Organization
 ------------
