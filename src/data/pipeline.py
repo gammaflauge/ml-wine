@@ -46,29 +46,16 @@ class WineFlow(FlowSpec):
         save_path = PROJECT_DIR / "data" / "interim" / "wine_df_nice_cols.csv"
         self.dataframe.to_csv(save_path, index=False)
 
-        self.next(self.make_tidy)
-    
-    @step
-    def make_tidy(self):
-        """
-        Create a tidy version of the wine dataframe
-        Save to "data/interim/wine_df_tidy.csv"
-        """
-        self.dataframe.index.name = 'wine_id'
-        self.dataframe = self.dataframe.reset_index()
-        self.dataframe = self.dataframe.melt(id_vars=['wine_id', 'class'])
-
-        save_path = PROJECT_DIR / "data" / "interim" / "wine_df_tidy.csv"
-        self.dataframe.to_csv(save_path, index=False)
-
         self.next(self.end)
 
     @step
     def end(self):
         """
+        Save the final version to "data/processed/wine_df_final.csv"
         End the flow.
         """
-        pass
+        save_path = PROJECT_DIR / "data" / "processed" / "wine_df_final.csv"
+        self.dataframe.to_csv(save_path, index=False)
 
 
 if __name__ == "__main__":
